@@ -37,12 +37,13 @@ const int ConvertTo25[9] = {
 	16,17,18
 };
 
+//Arrays to Block Winning Moves
 const int InMiddle = 4;
 const int Corners[4] = { 0, 2, 6, 8 };
 
-int ply = 0;
-int positions = 0;
-int maxPly = 0;
+int ply = 0; // how many moves depth of the tree we are
+int positions = 0; // get search positions from computer
+int maxPly = 0; //see how depth we go
 
 //gets the starting square as an argument
 //						17				5                          player
@@ -98,10 +99,15 @@ int FindThreeInARow(const int *board, const int ourindex, const int us) {
 int FindThreeInARowAllBoard(const int *board, const int us) {
 	int threeFound = 0;
 	int index;
-	for(index = 0; index < 9; ++index) {
-		if(board[ConvertTo25[index]] == us) {
+	//Loops through nine squares
+	for(index = 0; index < 9; ++index) 
+	{
+		//if at any point the loop finds humans mark ( NOUGHTS )
+		if(board[ConvertTo25[index]] == us) 
+		{
+			//it loops for three in a roll as if our last move was a NOUGHT on the square
 			if(FindThreeInARow(board, ConvertTo25[index], us) == 3) {				
-				threeFound = 1; 
+				threeFound = 1;  //->yes
 				break;
 			}
 		}
@@ -109,16 +115,20 @@ int FindThreeInARowAllBoard(const int *board, const int us) {
 	return threeFound;
 }
 
+//takes our side on the board
 int EvalForWin(const int *board, const int us) {
 
+	//if three are found in a roll
 	if(FindThreeInARowAllBoard(board, us) != 0)
-		return 1;
+		return 1; // return positive
+	//if on the oposite site it is crosses has found three in a roll
 	if(FindThreeInARowAllBoard(board, us ^ 1) != 0)
-		return -1;
+		return -1; // -> loss
 	
 	return 0;
 }
 
+//Recursive function 
 int MinMax(int *board, int side) {
 
 	// check is a win
@@ -127,54 +137,81 @@ int MinMax(int *board, int side) {
 	// assess bestscore
 	// end moves return bestscore
 	
-	int MoveList[9];
-	int MoveCount = 0;
-	int bestScore = -2;
-	int score = -2;
-	int bestMove = -1;
-	int Move;
-	int index;
+	int MoveList[9]; // the nine squares
+	int MoveCount = 0; // count of our moves
+	int bestScore = -2; // score would always be beaten
+	int score = -2; // keeps track of a current score for a move
+	int bestMove = -1; // keeps track of best move
+	int Move; //current move being made
+	int index; // loop index
 	
-	if(ply > maxPly) maxPly = ply;	
+	//keep track of our counters
+	//depth > how depth we go
+	if(ply > maxPly) 
+		maxPly = ply;
+	//increment the position because we have gone to a new position
 	positions++;
 	
-	if(ply > 0) {
+	//if we are not at the top of the tree
+	if(ply > 0) 
+	{
+		//is the current position a win or a loss
 		score = EvalForWin(board, side);
-		if(score != 0) {					
+		//if position was not won
+		if(score != 0) 
+		{	
+			//return the current score
 			return score;
 		}		
 	}
 	
 	// fill Move List
-	for(index = 0; index < 9; ++index) {
-		if( board[ConvertTo25[index]] == EMPTY) {
+	//loop through 9 squares
+	for(index = 0; index < 9; ++index) 
+	{
+		//if any empty square
+		if( board[ConvertTo25[index]] == EMPTY) 
+		{
 			MoveList[MoveCount++] = ConvertTo25[index];
 		}
 	}
 	
 	// loop all moves
-	for(index = 0; index < MoveCount; ++index) {
+	for(index = 0; index < MoveCount; ++index) 
+	{
+		//move is one of the moves on the move list
 		Move = MoveList[index];
+		//make move on board
 		board[Move] = side;	
 		
+		//increment depth
 		ply++;
+		//always trying to maximaze the score
+		//the score would be positive if a cross win (computer) - EvalForWin would return -1
 		score = -MinMax(board, side^1);
-		if(score > bestScore) {			
+		//if our current best score is better than the best score
+		if(score > bestScore) 
+		{			
 			bestScore = score;	
 			bestMove = Move;
 		}
+		//undo our move
 		board[Move] = EMPTY;
 		ply--;
 	}
 	
-	if(MoveCount==0) {
+	//if no more moves
+	if(MoveCount==0) 
+	{
+		//search for a three in a roll 
 		bestScore = FindThreeInARowAllBoard(board, side);	
 	}
 	
+	//if not on top of the tree
 	if(ply!=0)
 		return bestScore;	
 	else 
-		return bestMove;	
+		return bestMove;	//if on top we will return bestoMove
 }
 
 //Get empty squares at middle
@@ -234,20 +271,25 @@ void MakeMove(int *board, const int sq, const side)
 }
 
 int GetNextBest(const int *board) {
-
+	//firstly look at middle square
 	int ourMove = ConvertTo25[InMiddle];
-	if(board[ourMove] == EMPTY) {
+	if(board[ourMove] == EMPTY) 
+	{
+		//move to MiddleSquare
 		return ourMove;
 	}
 	
 	int index = 0;
 	ourMove = -1;
 	
+	//Looping through four corners
 	for(index = 0; index < 4; index++) {
+		//puts every corner in out move to see if it is emtpy
 		ourMove = ConvertTo25[Corners[index]];
 		if(board[ourMove] == EMPTY) {
 			break;
 		}
+		//going to next loop 
 		ourMove = -1;
 	}
 	
@@ -258,16 +300,25 @@ int GetWinningMove(int *board, const int side) {
 
 	int ourMove = -1;
 	int winFound = 0;
-	int index = 0;
+	int index = 0; //index for looping
 	
-	for(index = 0; index < 9; ++index) {
-		if( board[ConvertTo25[index]] == EMPTY) {
+	//loop through the nine squares
+	for(index = 0; index < 9; ++index) 
+	{
+		//if we get an empty square 
+		if( board[ConvertTo25[index]] == EMPTY) 
+		{
 			ourMove = ConvertTo25[index];
+			//board on our move is set to a X or O
 			board[ourMove] = side;
 			
-			if(FindThreeInARow(board, ourMove, side) == 3) {
+			//if win is found with the move - win
+			if(FindThreeInARow(board, ourMove, side) == 3) 
+			{
 				winFound = 1;
 			}	
+			
+			//board set to empty because of pointer
 			board[ourMove] = EMPTY;
 			if(winFound == 1) {
 				break;
@@ -279,12 +330,13 @@ int GetWinningMove(int *board, const int side) {
 }
 
 //pointer to board and computer side
-int GetComputerMove(int *board, const int side) {
-	
+//not constant because it is always changing
+int GetComputerMove(int *board, const int side) 
+{
 	ply=0;
 	positions=0;
 	maxPly=0;
-	int best = MinMax(board, side);
+	int best = MinMax(board, side); //get best move from MinMax
 	printf("Finished Searching positions:%d maxDepth:%d bestMove:%d\n",positions,maxPly,best);
 	return best;
 	
