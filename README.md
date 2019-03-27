@@ -5,10 +5,11 @@ Matriculation number: 40313507
 Tool chain for building - Notepad++ v7.5.4 (32-bit)
 Running on: Visual Studio 2017 Tools Command Prompt (Developer Command Prompt for Vs 2017 (DEV))
 
-Explaining how to use the wordcount application
+Explaining how to use the Tic-Tac-Toe application
 	1) open Developer Command Prompt for Vs 2017 (DEV)
 	2) type nmake coursework
-	3) To delete all of the *.obj/ *.exe/ .*asm type nmake clean
+	3) type tic-tac-toeMenu.exe
+	4) To delete all of the *.obj/ *.exe/ .*asm type nmake clean
 
 A quick overview:
 When you run the program you will have four opitons: 1. Multiple Player, 2. Single Player vs AI, 3. Replay Multiple player game and 4. Exit. 
