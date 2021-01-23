@@ -1,9 +1,14 @@
 # tic-tac-toe
-## Tic-Tac-Toe game using C language usable on the command prompt
-## Author: Venetsia Krasteva 
 
-### Tool chain for building - Notepad++ v7.5.4 (32-bit)
-### Running on: Visual Studio 2017 Tools Command Prompt (Developer Command Prompt for Vs 2017 (DEV))
+## Tic-Tac-Toe game using C language usable on the command prompt
+## Author: Venetsia Krasteva
+
+### 1. Demo
+* VS AI and Loading Project
+![alt text](https://github.com/venetsia/Tic-Tac-ToeGame/blob/master/TicTacToeDemo.gif)
+* VS Another Player (Multiplayer) and Reloading the game so you can watch (Replay)
+![alt text](https://github.com/venetsia/Tic-Tac-ToeGame/blob/master/TicTacToeDemoMultipleP.gif)
+	
 ### 1. Explaining how to use the Tic-Tac-Toe application
 	* open Developer Command Prompt for Vs 2017 (DEV)
 	* type nmake coursework
@@ -22,3 +27,6 @@ In Single Player vs AI you would get another menu to choose from:
 1. Easy - *When you chose easy the game runs but the choices the computer makes are random.*
 2. Unbeatable - *On unbeatable they are made with the MinMax algorithm to find the best next possible move of all so it runs all the options and finds the best one.*
 3. Back -  *With choice Back you just go Back to the main menu.*
+
+### Tool chain for building - Notepad++ v7.5.4 (32-bit)
+### Running on: Visual Studio 2017 Tools Command Prompt (Developer Command Prompt for Vs 2017 (DEV))
